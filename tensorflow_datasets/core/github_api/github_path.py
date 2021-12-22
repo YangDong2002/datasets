@@ -22,6 +22,7 @@ import pathlib
 import posixpath
 from typing import Iterator, Mapping, MutableMapping, Optional, Set, Tuple
 
+from etils import epath
 import requests
 from tensorflow_datasets.core import utils
 
@@ -184,7 +185,7 @@ class _PathMetadata:
     return cls(path=path, repo=repo, branch=branch, subpath=subpath)
 
 
-@utils.register_pathlike_cls(_URI_PREFIX)
+@epath.register_path_cls(_URI_PREFIX)
 class GithubPath(pathlib.PurePosixPath):
   """`pathlib.Path` like object for manipulating Github paths.
 
@@ -304,7 +305,7 @@ class GithubPath(pathlib.PurePosixPath):
       self,
       dst: utils.PathLike,
       overwrite: bool = False,
-  ) -> utils.ReadWritePath:
+  ) -> utils.Path:
     """Copy the current file to the given destination.
 
     Args:
@@ -317,7 +318,7 @@ class GithubPath(pathlib.PurePosixPath):
     Raises:
       FileExistsError: If `overwrite` is false and destination exists.
     """
-    dst = utils.as_path(dst)
+    dst = utils.Path(dst)
     if not overwrite and dst.exists():
       raise FileExistsError(f'Cannot copy {self}. Destination {dst} exists.')
     # Otherwise, copy src to dst

@@ -57,10 +57,9 @@ from tensorflow_datasets.core.utils import tfds_path
 from tensorflow_datasets.core.utils import Version
 from tensorflow_datasets.core.utils.benchmark import BenchmarkResult
 from tensorflow_datasets.core.utils.file_utils import add_data_dir
-from tensorflow_datasets.core.utils.generic_path import as_path
+from tensorflow_datasets.core.utils.file_utils import as_path
+from tensorflow_datasets.core.utils.type_utils import Path
 from tensorflow_datasets.core.utils.type_utils import PathLike
-from tensorflow_datasets.core.utils.type_utils import ReadOnlyPath
-from tensorflow_datasets.core.utils.type_utils import ReadWritePath
 
 
 def benchmark(*args, **kwargs):
@@ -86,10 +85,9 @@ __all__ = [
     "lazy_imports",
     "Metadata",
     "MetadataDict",
+    "Path",
     "PathLike",
     "ReadInstruction",
-    "ReadOnlyPath",
-    "ReadWritePath",
     "SplitDict",
     "SplitGenerator",
     "SplitInfo",

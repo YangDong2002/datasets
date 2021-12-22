@@ -322,7 +322,7 @@ def _get_default_config_name(builder_dir: str, name: str) -> Optional[str]:
       return cls.BUILDER_CONFIGS[0].name
 
   # Otherwise, try to load default config from common metadata
-  return dataset_builder.load_default_config_name(utils.as_path(builder_dir))
+  return dataset_builder.load_default_config_name(utils.Path(builder_dir))
 
 
 def _get_version_str(

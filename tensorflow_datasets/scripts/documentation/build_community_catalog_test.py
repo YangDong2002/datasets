@@ -25,7 +25,7 @@ DatasetName = utils.DatasetName
 
 
 def _create_dataset_package(namespace: str, name: str) -> DatasetPackage:
-  path = utils.as_path(
+  path = utils.Path(
       f'github://huggingface/datasets/tree/master/datasets/{name}')
   return DatasetPackage(
       name=DatasetName(namespace_name=f'{namespace}:{name}'),

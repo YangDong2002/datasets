@@ -107,10 +107,10 @@ def build_catalog(
   ]
   tfds.core.visibility.set_availables(dataset_types)
 
-  catalog_dir = tfds.core.as_path(catalog_dir)
+  catalog_dir = tfds.core.Path(catalog_dir)
   index_template = index_template or tfds.core.tfds_path(
       'scripts/documentation/templates/catalog_overview.md')
-  index_template = tfds.core.as_path(index_template)
+  index_template = tfds.core.Path(index_template)
 
   # Iterate over the builder documentations
   section_to_builder_docs = collections.defaultdict(list)
@@ -132,11 +132,11 @@ def build_catalog(
 
 
 def _save_table_of_content(
-    catalog_dir: tfds.core.ReadWritePath,
+    catalog_dir: tfds.core.Path,
     section_to_builder_docs: Dict[str,
                                   List[document_datasets.BuilderDocumentation]],
     toc_relative_path: str,
-    index_template: tfds.core.ReadOnlyPath,
+    index_template: tfds.core.Path,
     index_filename: str,
 ) -> None:
   """Builds and saves the table of contents (`_toc.yaml` and `overview.md`)."""

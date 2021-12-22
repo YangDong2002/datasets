@@ -261,8 +261,7 @@ def build_toc_yaml(
   return {'toc': sections}
 
 
-def build_and_save_community_catalog(
-    catalog_dir: tfds.core.ReadWritePath) -> None:
+def build_and_save_community_catalog(catalog_dir: tfds.core.Path) -> None:
   """Builds and saves the catalog of community datasets."""
   templates = DocumentationTemplates.load()
   formatter_per_namespace = _get_formatter_per_namespace(templates)
@@ -291,7 +290,7 @@ def _get_formatter_per_namespace(
 
 def _get_datasets_per_namespace() -> Mapping[str, Sequence[DatasetPackage]]:
   """Retrieves community datasets from GCS and groups them per namespace."""
-  content = utils.as_path(gcs_utils.GCS_COMMUNITY_INDEX_PATH).read_text()
+  content = utils.Path(gcs_utils.GCS_COMMUNITY_INDEX_PATH).read_text()
   datasets_per_namespace: MutableMapping[str, List[DatasetPackage]] = {}
   for line in content.splitlines():
     dataset_package = DatasetPackage.from_json(json.loads(line))
@@ -312,7 +311,7 @@ def main(args: argparse.Namespace):
       'community_catalog',
   )
 
-  catalog_dir = utils.as_path(catalog_dir)
+  catalog_dir = utils.Path(catalog_dir)
   build_and_save_community_catalog(catalog_dir=catalog_dir)
 
 

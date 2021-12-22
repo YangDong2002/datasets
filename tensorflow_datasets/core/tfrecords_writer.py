@@ -478,7 +478,7 @@ class BeamWriter(object):
     examples = itertools.chain(*[ex[1] for ex in sorted(examples_by_bucket)])
     # Write in a tmp file potential race condition if `--xxxxx_enable_backups`
     # is set and multiple workers try to write to the same file.
-    with utils.incomplete_file(utils.as_path(shard_path)) as tmp_path:
+    with utils.incomplete_file(utils.Path(shard_path)) as tmp_path:
       record_keys = _write_examples(tmp_path, examples, self._file_format)
     # If there are no record_keys, skip creating index files.
     if not record_keys:

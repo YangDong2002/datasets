@@ -75,7 +75,7 @@ def write_metadata(
       description, homepage,...). Will appear in the doc.
   """
   features = features_lib.features_dict.to_feature(features)
-  data_dir = utils.as_path(data_dir)
+  data_dir = utils.Path(data_dir)
   # Extract the tf-record filenames
   tfrecord_files = [
       f for f in data_dir.iterdir() if naming.FilenameInfo.is_valid(f.name)
@@ -142,7 +142,7 @@ def write_metadata(
 
 def _load_splits(
     *,
-    data_dir: utils.ReadWritePath,
+    data_dir: utils.Path,
     split_infos: Union[None, type_utils.PathLike, List[split_lib.SplitInfo]],
     file_infos: List[naming.FilenameInfo],
     builder: dataset_builder.DatasetBuilder,

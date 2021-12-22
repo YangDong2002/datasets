@@ -20,9 +20,9 @@ import os
 import posixpath
 from typing import List, Optional
 
+from etils import epath
 import tensorflow as tf
 
-from tensorflow_datasets.core.utils import generic_path
 from tensorflow_datasets.core.utils import py_utils
 from tensorflow_datasets.core.utils import tqdm_utils
 from tensorflow_datasets.core.utils import type_utils
@@ -49,7 +49,7 @@ GCS_UNAVAILABLE_EXCEPTIONS = (
 )
 
 
-def gcs_path(*relative_path: type_utils.PathLike) -> type_utils.ReadWritePath:
+def gcs_path(*relative_path: type_utils.PathLike) -> type_utils.Path:
   """Returns the GCS URI path.
 
   Args:
@@ -58,7 +58,7 @@ def gcs_path(*relative_path: type_utils.PathLike) -> type_utils.ReadWritePath:
   Returns:
     path: The GCS uri.
   """
-  return generic_path.as_path(GCS_ROOT_DIR).joinpath(*relative_path)
+  return epath.Path(GCS_ROOT_DIR).joinpath(*relative_path)
 
 
 # Community datasets index.
@@ -69,7 +69,7 @@ def gcs_path(*relative_path: type_utils.PathLike) -> type_utils.ReadWritePath:
 GCS_COMMUNITY_INDEX_PATH = gcs_path() / 'community-datasets-list.jsonl'
 
 
-def exists(path: type_utils.ReadWritePath) -> bool:
+def exists(path: type_utils.Path) -> bool:
   """Checks if path exists. Returns False if issues occur connecting to GCS."""
   try:
     return path.exists()

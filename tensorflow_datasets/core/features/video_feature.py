@@ -143,7 +143,7 @@ class Video(sequence_feature.Sequence):
       ffmpeg_args.append(out_pattern)
       utils.ffmpeg_run(ffmpeg_args, ffmpeg_stdin)
       frames = [  # Load all encoded images
-          p.read_bytes() for p in sorted(utils.as_path(ffmpeg_dir).iterdir())
+          p.read_bytes() for p in sorted(utils.Path(ffmpeg_dir).iterdir())
       ]
     return frames
 

@@ -36,7 +36,7 @@ Filename = NewType('Filename', Optional[str])
 
 
 def _collect_path_to_url_infos(
-) -> Dict[tfds.core.ReadWritePath, Dict[Url, checksums.UrlInfo]]:
+) -> Dict[tfds.core.Path, Dict[Url, checksums.UrlInfo]]:
   """Collect checksums paths to url_infos."""
   # Collect legacy checksums paths
   url_info_paths = list(checksums._checksum_paths().values())  # pylint: disable=protected-access

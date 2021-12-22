@@ -520,8 +520,8 @@ class YoutubeVis(tfds.core.BeamBasedBuilder):
     return resized_images
 
   def _generate_examples(self,
-                         annotations: type_utils.ReadOnlyPath,
-                         all_frames: type_utils.ReadOnlyPath,
+                         annotations: type_utils.Path,
+                         all_frames: type_utils.Path,
                          video_range_to_use: Optional[Tuple[int, int]] = None):
     beam = tfds.core.lazy_imports.apache_beam
     annotations = json.loads(annotations.read_text())

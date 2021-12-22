@@ -42,7 +42,7 @@ Response = Union[requests.Response, urllib.response.addinfourl]
 
 @dataclasses.dataclass(eq=False, frozen=True)
 class DownloadResult:
-  path: utils.ReadWritePath
+  path: utils.Path
   url_info: checksums_lib.UrlInfo
 
 
@@ -181,7 +181,7 @@ class _Downloader(object):
     self._pbar_dl_size.update_total(url_info.size)
     self._pbar_dl_size.update(url_info.size)
     self._pbar_url.update(1)
-    return DownloadResult(path=utils.as_path(out_path), url_info=url_info)
+    return DownloadResult(path=utils.Path(out_path), url_info=url_info)
 
   def _sync_download(self,
                      url: str,
@@ -237,7 +237,7 @@ class _Downloader(object):
             size_mb %= unit_mb
     self._pbar_url.update(1)
     return DownloadResult(
-        path=utils.as_path(path),
+        path=utils.Path(path),
         url_info=checksums_lib.UrlInfo(
             checksum=checksum.hexdigest(),
             size=utils.Size(size),

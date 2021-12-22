@@ -35,7 +35,7 @@ def test_write_metadata(
     tmp_path: pathlib.Path,
     file_format,
 ):
-  tmp_path = utils.as_path(tmp_path)
+  tmp_path = utils.Path(tmp_path)
 
   src_builder = testing.DummyDataset(
       data_dir=tmp_path / 'origin',

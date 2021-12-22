@@ -316,7 +316,7 @@ def test_basename_from_url(url: str, filename: str):
 
 
 def test_incomplete_file(tmp_path: pathlib.Path):
-  tmp_path = utils.as_path(tmp_path)
+  tmp_path = utils.Path(tmp_path)
   filepath = tmp_path / 'test.txt'
   with py_utils.incomplete_file(filepath) as tmp_filepath:
     tmp_filepath.write_text('content')

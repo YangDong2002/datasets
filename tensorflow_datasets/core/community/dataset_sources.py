@@ -31,18 +31,18 @@ class DatasetSource:
       `gs://.../my_dataset/`, `github://.../my_dataset/`)
     filenames: Content of the dataset package
   """
-  root_path: utils.ReadWritePath
+  root_path: utils.Path
   filenames: List[str]
 
   @classmethod
   def from_json(cls, value: utils.JsonValue) -> 'DatasetSource':
     """Imports from JSON."""
     if isinstance(value, str):  # Single-file dataset ('.../my_dataset.py')
-      path = utils.as_path(value)
+      path = utils.Path(value)
       return cls(root_path=path.parent, filenames=[path.name])
     elif isinstance(value, dict):  # Multi-file dataset
       return cls(
-          root_path=utils.as_path(value['root_path']),
+          root_path=utils.Path(value['root_path']),
           filenames=value['filenames'],
       )
     else:
@@ -61,7 +61,7 @@ class DatasetSource:
 
 def download_from_source(
     source: DatasetSource,
-    dst: utils.ReadWritePath,
+    dst: utils.Path,
 ) -> None:
   """Download the remote dataset code locally to the dst path.
 

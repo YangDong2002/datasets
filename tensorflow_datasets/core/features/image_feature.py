@@ -362,7 +362,7 @@ def _get_repr_html_ffmpeg(images: List[PilImage]) -> str:
         # so allow software encoding
         # '-allow_sw', '1',
     ]
-    video_path = utils.as_path(video_dir) / 'output.mp4'
+    video_path = utils.Path(video_dir) / 'output.mp4'
     ffmpeg_args.append(os.fspath(video_path))
     utils.ffmpeg_run(ffmpeg_args)
     video_str = utils.get_base64(video_path.read_bytes())

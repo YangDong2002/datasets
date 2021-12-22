@@ -60,9 +60,9 @@ class BuilderCodeInfo:
     cls_name: Dataset name, CamelCase (`MyDataset`)
     type: Dataset type (e.g. `image`, `text`, `object_detection`)
   """
-  file: tfds.core.ReadWritePath
-  dir: tfds.core.ReadWritePath
-  dst: tfds.core.ReadWritePath
+  file: tfds.core.Path
+  dir: tfds.core.Path
+  dst: tfds.core.Path
   name: str
   cls_name: str
   type: str
@@ -85,8 +85,8 @@ class BuilderCodeInfo:
 
 
 def _rename_dir(
-    src: tfds.core.ReadWritePath,
-    dst: tfds.core.ReadWritePath,
+    src: tfds.core.Path,
+    dst: tfds.core.Path,
 ) -> None:
   """Equivalent of `src.rename(dst)`."""
   # src.rename(dst) creates `Invalid cross-device link` on some remote file

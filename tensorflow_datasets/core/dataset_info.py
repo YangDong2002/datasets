@@ -694,7 +694,7 @@ def get_dataset_feature_statistics(builder, split):
 
 def read_from_json(path: type_utils.PathLike) -> dataset_info_pb2.DatasetInfo:
   """Read JSON-formatted proto into DatasetInfo proto."""
-  json_str = utils.as_path(path).read_text()
+  json_str = utils.Path(path).read_text()
   # Parse it back into a proto.
   parsed_proto = json_format.Parse(json_str, dataset_info_pb2.DatasetInfo())
   return parsed_proto

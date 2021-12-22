@@ -308,8 +308,7 @@ def incomplete_dir(dirname: type_utils.PathLike) -> Iterator[str]:
 
 
 @contextlib.contextmanager
-def incomplete_file(
-    path: type_utils.ReadWritePath,) -> Iterator[type_utils.ReadWritePath]:
+def incomplete_file(path: type_utils.Path,) -> Iterator[type_utils.Path]:
   """Writes to path atomically, by writing to temp file and renaming it."""
   tmp_path = path.parent / f'{path.name}.incomplete.{uuid.uuid4().hex}'
   try:

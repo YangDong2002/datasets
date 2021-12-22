@@ -94,7 +94,7 @@ class _InstalledPackage:
     return f'{_IMPORT_MODULE_NAME}.{name.namespace}.{name.name}.{self.hash}.{name.name}'
 
   @property
-  def installation_path(self) -> utils.ReadWritePath:
+  def installation_path(self) -> utils.Path:
     """Local path of the package."""
     name = self.package.name
     sub_dir = f'{_IMPORT_MODULE_NAME}/{name.namespace}/{name.name}/{self.hash}'
@@ -148,8 +148,8 @@ class _PackageIndex(collections.UserDict):
         dataset packages)
     """
     super().__init__()
-    self._remote_path: utils.ReadOnlyPath = utils.as_path(path)
-    self._cached_path: utils.ReadOnlyPath = (
+    self._remote_path: utils.Path = utils.Path(path)
+    self._cached_path: utils.Path = (
         cache.cache_path() / 'community-datasets-list.jsonl')
 
     # Pre-load the index from the cache
@@ -216,7 +216,7 @@ class PackageRegister(register_base.BaseRegister):
       path: Path to the register files containing the list of dataset sources,
         forwarded to `_PackageIndex`
     """
-    self._path = utils.as_path(path)
+    self._path = utils.Path(path)
 
   @utils.memoized_property
   def _package_index(self) -> _PackageIndex:
@@ -342,7 +342,7 @@ def _download_and_cache(package: DatasetPackage) -> _InstalledPackage:
   Returns:
     installed_dataset: The installed dataset package.
   """
-  tmp_dir = utils.as_path(tempfile.mkdtemp())
+  tmp_dir = utils.Path(tempfile.mkdtemp())
   try:
     # Download the package in a tmp directory
     dataset_sources_lib.download_from_source(
@@ -378,7 +378,7 @@ def _download_and_cache(package: DatasetPackage) -> _InstalledPackage:
   return installed_package
 
 
-def _compute_dir_hash(path: utils.ReadOnlyPath) -> str:
+def _compute_dir_hash(path: utils.Path) -> str:
   """Computes the checksums of the given directory deterministically."""
   all_files = sorted(path.iterdir())
 

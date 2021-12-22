@@ -287,7 +287,7 @@ def _new_open(*args, encoding=None, **kwargs):
 def _new_pathlib_path_new(cls, *args):
   """Mocked `pathlib.Path.__new__`."""
   del cls
-  return utils.as_path(*args)
+  return utils.Path(*args)
 
 
 @contextlib.contextmanager

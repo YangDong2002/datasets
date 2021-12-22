@@ -176,7 +176,7 @@ def _read_indices(path):
   paths = sorted(tf.io.gfile.glob('%s-*-of-*_index.json' % path))
   all_indices = []
   for path in paths:
-    json_str = utils.as_path(path).read_text()
+    json_str = utils.Path(path).read_text()
     # parse it back into a proto.
     shard_index = json.loads(json_str)
     all_indices.append(list(shard_index['index']))

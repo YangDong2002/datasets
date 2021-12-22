@@ -38,8 +38,8 @@ from tensorflow_datasets.core.utils import type_utils
 # pylint: disable=logging-format-interpolation
 
 Tree = type_utils.Tree
-ReadOnlyPath = type_utils.ReadOnlyPath
-ReadWritePath = type_utils.ReadWritePath
+Path = type_utils.Path
+Path = type_utils.Path
 
 Url = Union[str, resource_lib.Resource]
 ExtractPath = Union[type_utils.PathLike, resource_lib.Resource]
@@ -192,7 +192,7 @@ class DownloadManager(object):
         raise ValueError(
             'When register_checksums=True, register_checksums_path should be set.'
         )
-      register_checksums_path = utils.as_path(register_checksums_path)
+      register_checksums_path = utils.Path(register_checksums_path)
       if not register_checksums_path.exists():
         # Create the file here to make sure user has write access before
         # starting downloads.
@@ -202,17 +202,17 @@ class DownloadManager(object):
         # (e.g. TFDS installed by admin)
         register_checksums_path.write_text(register_checksums_path.read_text())
 
-    download_dir = utils.as_path(download_dir).expanduser()
+    download_dir = utils.Path(download_dir).expanduser()
     if extract_dir:
-      extract_dir = utils.as_path(extract_dir).expanduser()
+      extract_dir = utils.Path(extract_dir).expanduser()
     else:
       extract_dir = download_dir / 'extracted'
     if manual_dir:
-      manual_dir = utils.as_path(manual_dir).expanduser()
+      manual_dir = utils.Path(manual_dir).expanduser()
 
-    self._download_dir: ReadWritePath = download_dir
-    self._extract_dir: ReadWritePath = extract_dir
-    self._manual_dir: Optional[ReadOnlyPath] = manual_dir  # pytype: disable=annotation-type-mismatch  # attribute-variable-annotations
+    self._download_dir: Path = download_dir
+    self._extract_dir: Path = extract_dir
+    self._manual_dir: Optional[Path] = manual_dir  # pytype: disable=annotation-type-mismatch  # attribute-variable-annotations
     self._manual_dir_instructions = utils.dedent(manual_dir_instructions)
     self._download_dir.mkdir(parents=True, exist_ok=True)
     self._extract_dir.mkdir(parents=True, exist_ok=True)
@@ -274,7 +274,7 @@ class DownloadManager(object):
     """Returns the total size of downloaded files."""
     return sum(url_info.size for url_info in self._recorded_url_infos.values())
 
-  def _get_dl_path(self, url: str, sha256: str) -> ReadWritePath:
+  def _get_dl_path(self, url: str, sha256: str) -> Path:
     return self._download_dir / resource_lib.get_dl_fname(url, sha256)
 
   @property
@@ -295,9 +295,8 @@ class DownloadManager(object):
   @utils.build_synchronize_decorator()
   @utils.memoize()
   def _download(
-      self,
-      resource: Union[str,
-                      resource_lib.Resource]) -> promise.Promise[ReadOnlyPath]:
+      self, resource: Union[str,
+                            resource_lib.Resource]) -> promise.Promise[Path]:
     """Download resource, returns Promise->path to downloaded file.
 
     This function:
@@ -367,13 +366,13 @@ class DownloadManager(object):
 
   def _register_or_validate_checksums(
       self,
-      path: ReadWritePath,
+      path: Path,
       url: str,
       expected_url_info: Optional[checksums.UrlInfo],
       computed_url_info: Optional[checksums.UrlInfo],
-      checksum_path: Optional[ReadWritePath],
-      url_path: ReadWritePath,
-  ) -> ReadOnlyPath:
+      checksum_path: Optional[Path],
+      url_path: Path,
+  ) -> Path:
     """Validates/records checksums and renames final downloaded path."""
     # `path` can be:
     # * Manually downloaded
@@ -431,12 +430,12 @@ class DownloadManager(object):
   def _rename_and_get_final_dl_path(
       self,
       url: str,
-      path: ReadWritePath,
+      path: Path,
       expected_url_info: Optional[checksums.UrlInfo],
       computed_url_info: Optional[checksums.UrlInfo],
-      checksum_path: Optional[ReadWritePath],
-      url_path: ReadWritePath,
-  ) -> ReadWritePath:
+      checksum_path: Optional[Path],
+      url_path: Path,
+  ) -> Path:
     """Eventually rename the downloaded file if checksums were recorded."""
     # `path` can be:
     # * Manually downloaded
@@ -471,7 +470,7 @@ class DownloadManager(object):
 
   @utils.build_synchronize_decorator()
   @utils.memoize()
-  def _extract(self, resource: ExtractPath) -> promise.Promise[ReadOnlyPath]:
+  def _extract(self, resource: ExtractPath) -> promise.Promise[Path]:
     """Extract a single archive, returns Promise->path to extraction result."""
     if isinstance(resource, type_utils.PathLikeCls):
       resource = resource_lib.Resource(path=resource)
@@ -505,7 +504,7 @@ class DownloadManager(object):
     checksums_path = self.download(checksums_url)
     self._url_infos.update(checksums.load_url_infos(checksums_path))
 
-  def download_kaggle_data(self, competition_or_dataset: str) -> ReadWritePath:
+  def download_kaggle_data(self, competition_or_dataset: str) -> Path:
     """Download data for a given Kaggle Dataset or competition.
 
     Note: This function requires the Kaggle CLI tool.
@@ -522,15 +521,15 @@ class DownloadManager(object):
                                        self._download_dir)
 
   @typing.overload
-  def download(self, url_or_urls: Url) -> ReadOnlyPath:
+  def download(self, url_or_urls: Url) -> Path:
     ...
 
   @typing.overload
-  def download(self, url_or_urls: Dict[str, Url]) -> Dict[str, ReadOnlyPath]:
+  def download(self, url_or_urls: Dict[str, Url]) -> Dict[str, Path]:
     ...
 
   @typing.overload
-  def download(self, url_or_urls: Tree[Url]) -> Tree[ReadOnlyPath]:
+  def download(self, url_or_urls: Tree[Url]) -> Tree[Path]:
     ...
 
   def download(self, url_or_urls):
@@ -568,16 +567,15 @@ class DownloadManager(object):
     return extractor.iter_archive(resource.path, resource.extract_method)
 
   @typing.overload
-  def extract(self, path_or_paths: ExtractPath) -> ReadOnlyPath:
+  def extract(self, path_or_paths: ExtractPath) -> Path:
     ...
 
   @typing.overload
-  def extract(self,
-              path_or_paths: Dict[str, ExtractPath]) -> Dict[str, ReadOnlyPath]:
+  def extract(self, path_or_paths: Dict[str, ExtractPath]) -> Dict[str, Path]:
     ...
 
   @typing.overload
-  def extract(self, path_or_paths: Tree[ExtractPath]) -> Tree[ReadOnlyPath]:
+  def extract(self, path_or_paths: Tree[ExtractPath]) -> Tree[Path]:
     ...
 
   def extract(self, path_or_paths):
@@ -598,16 +596,16 @@ class DownloadManager(object):
       return _map_promise(self._extract, path_or_paths)
 
   @typing.overload
-  def download_and_extract(self, url_or_urls: Url) -> ReadOnlyPath:
+  def download_and_extract(self, url_or_urls: Url) -> Path:
     ...
 
   @typing.overload
-  def download_and_extract(
-      self, url_or_urls: Dict[str, Url]) -> Dict[str, ReadOnlyPath]:
+  def download_and_extract(self, url_or_urls: Dict[str,
+                                                   Url]) -> Dict[str, Path]:
     ...
 
   @typing.overload
-  def download_and_extract(self, url_or_urls: Tree[Url]) -> Tree[ReadOnlyPath]:
+  def download_and_extract(self, url_or_urls: Tree[Url]) -> Tree[Path]:
     ...
 
   def download_and_extract(self, url_or_urls):
@@ -634,11 +632,11 @@ class DownloadManager(object):
         return _map_promise(self._download_extract, url_or_urls)
 
   @property
-  def download_dir(self) -> ReadOnlyPath:
+  def download_dir(self) -> Path:
     return self._download_dir
 
   @utils.memoized_property
-  def manual_dir(self) -> ReadOnlyPath:
+  def manual_dir(self) -> Path:
     """Returns the directory containing the manually extracted data."""
     if not self._manual_dir:
       raise AssertionError('Manual directory not enabled.')
@@ -654,9 +652,9 @@ class DownloadManager(object):
 
 
 def _get_cached_path(
-    manually_downloaded_path: Optional[ReadWritePath],
-    checksum_path: Optional[ReadWritePath],
-    url_path: ReadWritePath,
+    manually_downloaded_path: Optional[Path],
+    checksum_path: Optional[Path],
+    url_path: Path,
     expected_url_info: Optional[checksums.UrlInfo],
 ) -> downloader.DownloadResult:
   """Returns the downloaded path and computed url-info.
@@ -698,9 +696,9 @@ def _get_cached_path(
 
 
 def _get_manually_downloaded_path(
-    manual_dir: Optional[ReadOnlyPath],
+    manual_dir: Optional[Path],
     expected_url_info: Optional[checksums.UrlInfo],
-) -> Optional[ReadOnlyPath]:
+) -> Optional[Path]:
   """Checks if file is already downloaded in manual_dir."""
   if not manual_dir:  # Manual dir not passed
     return None
@@ -717,7 +715,7 @@ def _get_manually_downloaded_path(
 
 def _validate_checksums(
     url: str,
-    path: ReadOnlyPath,
+    path: Path,
     computed_url_info: Optional[checksums.UrlInfo],
     expected_url_info: Optional[checksums.UrlInfo],
     force_checksums_validation: bool,
